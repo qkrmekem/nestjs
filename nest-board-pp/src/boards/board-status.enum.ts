@@ -1,4 +1,5 @@
 // model : 스프링에서 domain
+/* before typeorm
 export interface Board{
     id: string,
     title: string,
@@ -7,7 +8,7 @@ export interface Board{
     // enum으로 정의
     status: BoardStatus
 }
-
+*/
 export enum BoardStatus{
     PUBLIC = 'PUBLIC',
     PRIVATE = 'PRIVATE'
