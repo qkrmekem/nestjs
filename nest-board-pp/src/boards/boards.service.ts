@@ -7,6 +7,7 @@ import { CreateBoardDto } from './dto/create-board.dto';
 import { Board } from './board.entity';
 import {Repository} from 'typeorm'
 import { BoardRepository } from './board.repository';
+import { User } from 'src/auth/user.entity';
 
 @Injectable()
 export class BoardsService {
@@ -15,7 +16,7 @@ export class BoardsService {
         private boardRepository: BoardRepository
     ){}
 
-    creatBoard(createBoardDto: CreateBoardDto): Promise<Board>{
+    creatBoard(createBoardDto: CreateBoardDto, user: User): Promise<Board>{
         // repository 패턴 적용 전
         // const {title, description} = createBoardDto;
 
@@ -27,7 +28,7 @@ export class BoardsService {
 
         // await this.boardRepository.save(board);
         // return board;
-        return this.boardRepository.createBoard(createBoardDto);
+        return this.boardRepository.createBoard(createBoardDto, user);
     }
 
     getAllBoards(): Promise<Board[]>{

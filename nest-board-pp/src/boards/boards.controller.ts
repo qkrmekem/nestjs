@@ -1,12 +1,16 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe, ParseIntPipe } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { BoardStatus } from './board-status.enum';
 import { CreateBoardDto } from './dto/create-board.dto';
 import { BoardStatusValidationPipe } from './pipes/board-status-validation.pipe';
 import { Board } from './board.entity';
 import { log } from 'console';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from 'src/auth/get-user.decorator';
+import { User } from 'src/auth/user.entity';
 
 @Controller('boards')
+@UseGuards(AuthGuard()) // 컨트롤러 레벨로 가드 적용
 export class BoardsController {
     // 접근 제한자를 생성자 파라미터에 선언하면 
     // 접근 제한자가 사용된 생성자 파라미터는 암묵적으로 클래스 프로퍼티로 선언이 됨
@@ -15,10 +19,12 @@ export class BoardsController {
 
     @Post()
     @UsePipes(ValidationPipe)
-    createBoard(@Body() createBoard: CreateBoardDto) : Promise<Board>{
+    createBoard(
+        @Body() createBoard: CreateBoardDto,
+        @GetUser() user: User) : Promise<Board>{
         // console.log("createBoard");
         
-        return this.boardService.creatBoard(createBoard);
+        return this.boardService.creatBoard(createBoard,user);
     }
 
     @Get()
