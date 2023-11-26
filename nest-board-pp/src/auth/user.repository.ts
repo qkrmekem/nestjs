@@ -39,6 +39,7 @@ export class UserRepository{
         const { username, password } = authCredentialDto;
         const user = await this.userRepository.findOneBy({username});
 
+        // 입력받은 password와 db에 저장된 password를 비교하여 일치한지 체크
         if(user && (await bcrypt.compare(password, user.password))){
             
             // 유저 토큰 생성 (secret + payload)

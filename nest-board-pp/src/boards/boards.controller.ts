@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, UsePipes, ValidationPipe, UseGuards, Logger } from '@nestjs/common';
 import { BoardsService } from './boards.service';
 import { BoardStatus } from './board-status.enum';
 import { CreateBoardDto } from './dto/create-board.dto';
@@ -12,6 +12,7 @@ import { User } from 'src/auth/user.entity';
 @Controller('boards')
 @UseGuards(AuthGuard()) // 컨트롤러 레벨로 가드 적용
 export class BoardsController {
+    private logger = new Logger('BoardsController');
     // 접근 제한자를 생성자 파라미터에 선언하면 
     // 접근 제한자가 사용된 생성자 파라미터는 암묵적으로 클래스 프로퍼티로 선언이 됨
     // 원래는 스프링처럼 필드에 변수를 선언하고 생성자에서 변수에 주입을 받아야 함
@@ -23,13 +24,17 @@ export class BoardsController {
         @Body() createBoard: CreateBoardDto,
         @GetUser() user: User) : Promise<Board>{
         // console.log("createBoard");
-        
+        this.logger.verbose(`User ${user.username} creating a new board.
+        payload: ${JSON.stringify(createBoard)}`)
         return this.boardService.creatBoard(createBoard,user);
     }
 
     @Get()
-    getAllBoards(): Promise<Board[]>{
-        return this.boardService.getAllBoards();
+    getAllBoards(
+        @GetUser() user: User
+    ): Promise<Board[]>{
+        this.logger.verbose(`User ${user.username} trying to get all boards`);
+        return this.boardService.getAllBoards(user);
     }
 
     @Get('/id')
@@ -45,8 +50,8 @@ export class BoardsController {
     }
 
     @Delete('/:id')
-    deleteBoard(@Param('id') id: number, Parse): Promise<void> {
-        return this.boardService.deleteBoard(id);
+    deleteBoard(@Param('id') id: number, @GetUser() user:User): Promise<void> {
+        return this.boardService.deleteBoard(id, user);
     }
 
     /* before typeorm

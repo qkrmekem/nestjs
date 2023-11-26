@@ -26,6 +26,7 @@ export class AuthController {
     @Post('/test')
     // 토큰이 유효한 토큰인지 확인하고, request에 사용자 정보를 담아주는 역할을 함
     @UseGuards(AuthGuard())
+    // test(@Req() req){
     test(@GetUser() user:User){
         console.log('user', user);
         

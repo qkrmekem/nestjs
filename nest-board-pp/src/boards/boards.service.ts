@@ -31,8 +31,8 @@ export class BoardsService {
         return this.boardRepository.createBoard(createBoardDto, user);
     }
 
-    getAllBoards(): Promise<Board[]>{
-        return this.boardRepository.getAllBoards();
+    getAllBoards(user: User): Promise<Board[]>{
+        return this.boardRepository.getAllBoards(user);
     }
 
     getBoardById(id:number): Promise<Board>{
@@ -49,8 +49,8 @@ export class BoardsService {
         return this.boardRepository.updateBoardStatus(id, status);
     }
 
-    deleteBoard(id: number): Promise<void> {
-        return this.boardRepository.deleteBoard(id);
+    deleteBoard(id: number, user: User): Promise<void> {
+        return this.boardRepository.deleteBoard(id, user);
     }
     /* before typeorm
     private boards: Board[] = [];
