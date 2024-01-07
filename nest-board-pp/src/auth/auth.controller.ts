@@ -29,6 +29,5 @@ export class AuthController {
     // test(@Req() req){
     test(@GetUser() user:User){
         console.log('user', user);
-        
     }
 }
